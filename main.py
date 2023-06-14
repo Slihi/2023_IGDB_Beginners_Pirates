@@ -12,7 +12,13 @@ Player can move ship around by clicking on the screen
 
 
 """
+#Resources
+#Import Assets folder in the same directory as main.py
+pygl_assets = pyglet.resource.path = ['Assets']
 
+#Import Images
+pyglet.resource.reindex()
+X_Mark_Image = pyglet.resource.image("X_Mark.png")
 
 #Colors
 WHITE = (255, 255, 255)
@@ -41,6 +47,7 @@ class curser:
         self.height = 10
         self.color = RED
         self.visibility = False
+        self.image = X_Mark_Image
     def reveal(self):
         self.visibility = True
     def hide(self):
@@ -48,7 +55,7 @@ class curser:
 
     def draw(self):
         if self.visibility:
-            pyglet.shapes.Rectangle(self.x, self.y, self.width, self.height, color=self.color).draw()
+            self.image.blit(self.x, self.y)
 
 #Objects
 X_Mark = curser()

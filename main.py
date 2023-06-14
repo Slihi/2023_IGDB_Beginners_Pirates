@@ -24,6 +24,10 @@ window = pyglet.window.Window(ScreenSize[0], ScreenSize[1], "Game")
 def on_draw():
     window.clear
 
+    #Square_test
+    square = pyglet.shapes.Rectangle(0, 0, 50, 100, color=RED)
+    square.draw()
+
 @window.event
 def update(dt):
     pass

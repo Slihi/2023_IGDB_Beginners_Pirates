@@ -9,6 +9,13 @@ Theme: "Pirates"
 
 Starting Ideas:
 Player can move ship around by clicking on the screen
+Player can shoot cannon balls at other ships
+Player can upgrade level of ship by capture other ships (up to 3)
+Getting hit loses a level of ship
+Player can go collect resources from islands (gold)
+If you have enough gold, you win the game
+Other ships trying to stop you.
+
 
 
 """

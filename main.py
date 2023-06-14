@@ -30,6 +30,7 @@ pygl_assets = pyglet.resource.path = ['Assets']
 #Import Images
 pyglet.resource.reindex()
 X_Mark_Image = pyglet.resource.image("X_Mark.png")
+ShipLv1_Image = pyglet.resource.image("ShipLv1.png")
 
 #Colors
 WHITE = (255, 255, 255)
@@ -98,11 +99,15 @@ def on_draw():
     window.clear()
 
     #Square_test
-    square = pyglet.shapes.Rectangle(0, 0, 50, 100, color=TAN)
-    square.draw()
+    #square = pyglet.shapes.Rectangle(0, 0, 50, 100, color=TAN)
+    #square.draw()
 
     #Curser/ X_Mark
     X_Mark.draw()
+    #Scale Ship
+    ShipLv1_Image.width = 34 * 2
+    ShipLv1_Image.height = 64 * 2
+    ShipLv1_Image.blit(0, 0)
 
 @window.event
 def update(dt):

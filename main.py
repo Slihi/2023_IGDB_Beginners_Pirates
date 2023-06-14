@@ -12,6 +12,10 @@ Player can move ship around by clicking on the screen
 
 
 """
+#Game modes
+Main_Menu = True
+Game_Mode = False
+
 #Resources
 #Import Assets folder in the same directory as main.py
 pygl_assets = pyglet.resource.path = ['Assets']
@@ -34,7 +38,7 @@ game_title = "Game"
 FPS = 60
 
 #Window
-window = pyglet.window.Window(ScreenSize[0], ScreenSize[1], "Game")
+window = pyglet.window.Window(ScreenSize[0], ScreenSize[1], "Game", resizable=True)
 
 #Keys
 keys = set()
@@ -43,11 +47,13 @@ class curser:
     def __init__(self):
         self.x = 0
         self.y = 0
-        self.width = 10
-        self.height = 10
+        self.width = int(ScreenSize[0] / 32)
+        self.height = int(ScreenSize[1] / 24)
         self.color = RED
         self.visibility = False
         self.image = X_Mark_Image
+        self.image.width = self.width
+        self.image.height = self.height
     def reveal(self):
         self.visibility = True
     def hide(self):
@@ -55,11 +61,15 @@ class curser:
 
     def draw(self):
         if self.visibility:
-            self.image.blit(self.x, self.y)
+            self.image.blit(self.x - self.width / 2, self.y - self.height / 2)
 
 #Objects
 X_Mark = curser()
 
+@window.event
+#Resize window
+def on_resize(width, height):
+    ScreenSize = (width, height)
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     print(f"Mouse pressed at {x}, {y}")

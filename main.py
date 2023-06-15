@@ -48,7 +48,7 @@ game_title = "Game"
 FPS = 60
 
 #Window
-window = pyglet.window.Window(ScreenSize[0], ScreenSize[1], "Game", resizable=True)
+window = pyglet.window.Window(ScreenSize[0], ScreenSize[1], game_title, resizable=True)
 
 #Keys
 keys = set()
@@ -75,16 +75,35 @@ class curser:
         if self.visibility:
             self.sprite.draw()
 
+class Player:
+    def __init__(self):
+        self.sprite = pyglet.sprite.Sprite(Ship_bigger)
+        self.sprite.scale_x = ScreenSize[0] / (self.sprite.width * 14)
+        self.sprite.scale_y = ScreenSize[1] / (self.sprite.height * 5)
+        self.x = ScreenSize[0] / 2 - (self.sprite.width / 2)
+        self.y = ScreenSize[1] / 2 - (self.sprite.height / 2)
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+
+    def draw(self):
+        self.sprite.draw()
+
+
 #Objects
 X_Mark = curser()
+player = Player()
 
 @window.event
 #Resize window
 def on_resize(width, height):
+    global ScreenSize
     ScreenSize = (width, height)
+    #Update Player dimensions and position
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     print(f"Mouse pressed at {x}, {y}")
+
+    #update X_Mark
     X_Mark.x = x
     X_Mark.sprite.x = x - (X_Mark.width / 2)
     X_Mark.y = y
@@ -109,13 +128,7 @@ def on_draw():
     #square.draw()
 
     #Ship Test
-    Lv1Ship_Sprite = pyglet.sprite.Sprite(Ship_bigger)
-
-    Lv1Ship_Sprite.scale_x = ScreenSize[0] / (Lv1Ship_Sprite.width * 14)
-    Lv1Ship_Sprite.scale_y = ScreenSize[1] / (Lv1Ship_Sprite.height * 5)
-    Lv1Ship_Sprite.x = 0
-    Lv1Ship_Sprite.y = 0
-    Lv1Ship_Sprite.draw()
+    player.draw()
 
     X_Mark.draw()
 

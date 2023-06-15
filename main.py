@@ -112,7 +112,7 @@ def on_draw():
     Lv1Ship_Sprite = pyglet.sprite.Sprite(Ship_bigger)
 
     Lv1Ship_Sprite.scale_x = ScreenSize[0] / (Lv1Ship_Sprite.width * 14)
-    Lv1Ship_Sprite.scale_y = ScreenSize[1] / (Lv1Ship_Sprite.height * 6)
+    Lv1Ship_Sprite.scale_y = ScreenSize[1] / (Lv1Ship_Sprite.height * 5)
     Lv1Ship_Sprite.x = 0
     Lv1Ship_Sprite.y = 0
     Lv1Ship_Sprite.draw()

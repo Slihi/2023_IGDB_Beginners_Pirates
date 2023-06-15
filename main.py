@@ -1,5 +1,4 @@
 import pyglet
-import numpy as np
 from pyglet.window import key
 
 #TEST GIT PUSH
@@ -26,14 +25,13 @@ Game_Mode = False
 #Resources
 #Import Assets folder in the same directory as main.py
 pygl_assets = pyglet.resource.path = ['Assets']
+pyglet.resource.reindex()
 
 #Import Images
-pyglet.resource.reindex()
 X_Mark_Image = pyglet.resource.image("X_Mark.png")
 X_Mark_Image_Sprite = pyglet.sprite.Sprite(X_Mark_Image)
-ShipLv1_Image = pyglet.resource.image("ShipLv1.png")
+#Level 1 Ship, bigger resolution to reduce pixelation from improper scaling transform
 Ship_bigger = pyglet.resource.image("Ship_bigger.png")
-ShipLV1_JPEG = pyglet.resource.image("ShipLv1.jpeg")
 
 #Colors
 WHITE = (255, 255, 255)
@@ -109,11 +107,17 @@ def on_draw():
     #square = pyglet.shapes.Rectangle(0, 0, 50, 100, color=TAN)
     #square.draw()
 
-    #Scale Ship
-    ShipLv1_Image.width = 34 * 2
-    ShipLv1_Image.height = 64 * 2
-    ShipLv1_Image.blit(0, 0)
+    #Ship Test
+    Lv1Ship_Sprite = pyglet.sprite.Sprite(Ship_bigger)
+    Lv1Ship_scale = 0.25
+    Lv1Ship_Sprite.scale_x = Lv1Ship_scale
+    Lv1Ship_Sprite.scale_y = Lv1Ship_scale
+    Lv1Ship_Sprite.x = 0
+    Lv1Ship_Sprite.y = 0
+    Lv1Ship_Sprite.draw()
+
     X_Mark.draw()
+
 
 @window.event
 def update(dt):

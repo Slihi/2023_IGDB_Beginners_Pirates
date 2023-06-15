@@ -33,6 +33,9 @@ X_Mark_Image_Sprite = pyglet.sprite.Sprite(X_Mark_Image)
 #Level 1 Ship, bigger resolution to reduce pixelation from improper scaling transform
 Ship_bigger = pyglet.resource.image("Ship_bigger.png")
 
+#Ocean Tiles
+Ocean_Tile1 = pyglet.resource.image("Ocean1.png")
+
 #Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -123,6 +126,19 @@ def on_key_release(symbol, modifiers):
 def on_draw():
     window.clear()
 
+    #OceanFirst,Render
+    Ocean_Tile1_Sprite = pyglet.sprite.Sprite(Ocean_Tile1)
+
+    for i in range(0, int(ScreenSize[0] / Ocean_Tile1_Sprite.width) + 1):
+        for j in range(0, int(ScreenSize[1] / Ocean_Tile1_Sprite.height) + 1):
+            Ocean_Tile1_Sprite.x = i * Ocean_Tile1_Sprite.width
+            Ocean_Tile1_Sprite.y = j * Ocean_Tile1_Sprite.height
+            Ocean_Tile1_Sprite.draw()
+
+    #Ocean_Tile1_Sprite.scale_x = ScreenSize[0] / Ocean_Tile1_Sprite.width
+    #Ocean_Tile1_Sprite.scale_y = ScreenSize[1] / Ocean_Tile1_Sprite.height
+    #Ocean_Tile1_Sprite.draw()
+
     #Square_test
     #square = pyglet.shapes.Rectangle(0, 0, 50, 100, color=TAN)
     #square.draw()
@@ -131,6 +147,8 @@ def on_draw():
     player.draw()
 
     X_Mark.draw()
+
+
 
 
 @window.event

@@ -43,6 +43,7 @@ TAN = (210, 180, 140)
 
 #Variables
 ScreenSize = (800, 600)
+AspectRatio = (ScreenSize[0] / ScreenSize[1])
 game_title = "Game"
 FPS = 60
 
@@ -109,9 +110,9 @@ def on_draw():
 
     #Ship Test
     Lv1Ship_Sprite = pyglet.sprite.Sprite(Ship_bigger)
-    Lv1Ship_scale = 0.25
-    Lv1Ship_Sprite.scale_x = Lv1Ship_scale
-    Lv1Ship_Sprite.scale_y = Lv1Ship_scale
+
+    Lv1Ship_Sprite.scale_x = ScreenSize[0] / (Lv1Ship_Sprite.width * 14)
+    Lv1Ship_Sprite.scale_y = ScreenSize[1] / (Lv1Ship_Sprite.height * 6)
     Lv1Ship_Sprite.x = 0
     Lv1Ship_Sprite.y = 0
     Lv1Ship_Sprite.draw()

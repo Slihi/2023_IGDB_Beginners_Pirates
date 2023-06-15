@@ -30,6 +30,7 @@ pygl_assets = pyglet.resource.path = ['Assets']
 #Import Images
 pyglet.resource.reindex()
 X_Mark_Image = pyglet.resource.image("X_Mark.png")
+X_Mark_Image_Sprite = pyglet.sprite.Sprite(X_Mark_Image)
 ShipLv1_Image = pyglet.resource.image("ShipLv1.png")
 Ship_bigger = pyglet.resource.image("Ship_bigger.png")
 ShipLV1_JPEG = pyglet.resource.image("ShipLv1.jpeg")
@@ -61,9 +62,11 @@ class curser:
         self.height = int(ScreenSize[1] / 24)
         self.color = RED
         self.visibility = False
-        self.image = X_Mark_Image
-        self.image.width = self.width
-        self.image.height = self.height
+        self.sprite = pyglet.sprite.Sprite(X_Mark_Image)
+        self.sprite.scale_x = self.width / self.sprite.width
+        self.sprite.scale_y = self.height / self.sprite.height
+        self.sprite.x = self.x
+        self.sprite.y = self.y
     def reveal(self):
         self.visibility = True
     def hide(self):
@@ -71,7 +74,7 @@ class curser:
 
     def draw(self):
         if self.visibility:
-            self.image.blit(self.x - self.width / 2, self.y - self.height / 2)
+            self.sprite.draw()
 
 #Objects
 X_Mark = curser()
@@ -84,7 +87,9 @@ def on_resize(width, height):
 def on_mouse_press(x, y, button, modifiers):
     print(f"Mouse pressed at {x}, {y}")
     X_Mark.x = x
+    X_Mark.sprite.x = x - (X_Mark.width / 2)
     X_Mark.y = y
+    X_Mark.sprite.y = y - (X_Mark.height / 2)
     X_Mark.reveal()
 
 @window.event
@@ -105,12 +110,9 @@ def on_draw():
     #square.draw()
 
     #Scale Ship
-    #ShipLv1_Image.width = 34 * 2
-    #ShipLv1_Image.height = 64 * 2
-    #ShipLv1_Image.blit(0, 0)
-    ShipLV1_JPEG.blit(0, 0)
-
-    # Curser/ X_Mark
+    ShipLv1_Image.width = 34 * 2
+    ShipLv1_Image.height = 64 * 2
+    ShipLv1_Image.blit(0, 0)
     X_Mark.draw()
 
 @window.event

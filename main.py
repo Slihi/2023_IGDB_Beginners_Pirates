@@ -1,5 +1,6 @@
 import pyglet
 from pyglet.window import key
+import numpy as np
 
 #TEST GIT PUSH
 """
@@ -15,12 +16,19 @@ Player can go collect resources from islands (gold)
 If you have enough gold, you win the game
 Other ships trying to stop you.
 
+Need to implement proper movement of ship with Vectors
+
 
 
 """
 #Game modes
 Main_Menu = True
 Game_Mode = False
+
+#Variables
+Ship_Level = 1
+Ship_Max_Level = 3
+Ship_Speed = 1
 
 #Resources
 #Import Assets folder in the same directory as main.py
@@ -69,6 +77,7 @@ class curser:
         self.sprite.scale_y = self.height / self.sprite.height
         self.sprite.x = self.x
         self.sprite.y = self.y
+        self.speed = pyglet.vector.Vector2(0, 0)
     def reveal(self):
         self.visibility = True
     def hide(self):
@@ -77,6 +86,7 @@ class curser:
     def draw(self):
         if self.visibility:
             self.sprite.draw()
+
 
 class Player:
     def __init__(self):
@@ -87,9 +97,36 @@ class Player:
         self.y = ScreenSize[1] / 2 - (self.sprite.height / 2)
         self.sprite.x = self.x
         self.sprite.y = self.y
+        self.destination = (self.x, self.y)
 
     def draw(self):
         self.sprite.draw()
+
+    def update(self, destination):
+        self.destination = destination
+        if self.x + Ship_Speed > self.destination[0] > self.x - Ship_Speed and \
+                self.y + Ship_Speed > self.destination[1] > self.y - Ship_Speed:
+            self.x = self.destination[0]
+            self.sprite.x = self.destination[0]
+
+        if self.y + Ship_Speed > self.destination[1] > self.y - Ship_Speed and \
+                self.x + Ship_Speed > self.destination[0] > self.x - Ship_Speed:
+            self.y = self.destination[1]
+            self.sprite.y = self.destination[1]
+
+        else:
+            if self.x < self.destination[0]:
+                self.x += Ship_Speed
+                self.sprite.x += Ship_Speed
+            elif self.x > self.destination[0]:
+                self.x -= Ship_Speed
+                self.sprite.x -= Ship_Speed
+            if self.y < self.destination[1]:
+                self.y += Ship_Speed
+                self.sprite.y += Ship_Speed
+            elif self.y > self.destination[1]:
+                self.y -= Ship_Speed
+                self.sprite.y -= Ship_Speed
 
 
 #Objects
@@ -104,7 +141,7 @@ def on_resize(width, height):
     #Update Player dimensions and position
 @window.event
 def on_mouse_press(x, y, button, modifiers):
-    print(f"Mouse pressed at {x}, {y}")
+    #print(f"Mouse pressed at {x}, {y}")
 
     #update X_Mark
     X_Mark.x = x
@@ -112,6 +149,10 @@ def on_mouse_press(x, y, button, modifiers):
     X_Mark.y = y
     X_Mark.sprite.y = y - (X_Mark.height / 2)
     X_Mark.reveal()
+
+    #Set Player destination
+    player.destination = (x, y)
+
 
 @window.event
 def on_key_press(symbol, modifiers):
@@ -153,6 +194,8 @@ def on_draw():
 
 @window.event
 def update(dt):
+    #Update Player Movement
+    player.update(player.destination)
     pass
 
 #Run

@@ -176,6 +176,7 @@ def on_key_press(symbol, modifiers):
     keys.add(symbol)
     if symbol == key.ESCAPE:
         window.close()
+
 @window.event
 def on_key_release(symbol, modifiers):
     keys.remove(symbol)
@@ -234,7 +235,13 @@ def on_draw():
 @window.event
 def update(dt):
     #Update Player Movement
+    global keys
     player.update(player.destination)
+
+    if key.RIGHT in keys:
+        player.rotate_CW()
+    if key.LEFT in keys:
+        player.rotate_CCW()
     pass
 
 #Run

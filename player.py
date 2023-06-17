@@ -6,7 +6,6 @@ import numpy as np
 Ship_Level = 1
 Ship_Max_Level = 3
 Ship_Speed_portion = 8
-Ship_rotation_speed = 3
 
 ScreenSize = (800, 600)
 AspectRatio = (ScreenSize[0] / ScreenSize[1])
@@ -203,7 +202,7 @@ class Player:
     def update(self, destination):
 
         self.nose_locator()
-        self.rotate_CW()
+        self.move_forward()
         #print(f"Ship x and y: {self.x}, {self.y}, Sprite x and y: {self.sprite.x}, {self.sprite.y}")
 
         #self.move_forward()

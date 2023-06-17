@@ -5,7 +5,7 @@ import numpy as np
 #Variables
 Ship_Level = 1
 Ship_Max_Level = 3
-Ship_Speed_portion = 10
+Ship_Speed_portion = 8
 Ship_rotation_speed = 3
 
 ScreenSize = (800, 600)
@@ -28,9 +28,12 @@ class Player:
         #sprite and dimensions
         self.nose_location = [0, 0]
         self.sprite = pyglet.sprite.Sprite(Ship_bigger)
+
+        #Scale the sprite
         self.sprite.scale_x = self.screen_width / (self.sprite.width * 14)
         self.sprite.scale_y = self.screen_height / (self.sprite.height * 5)
         self.scale_ratio = self.sprite.scale_x / self.sprite.scale_y
+
         self.x = initial_x
         self.y = initial_y
         self.sprite.x = self.x
@@ -115,25 +118,33 @@ class Player:
         self.nose_location = [self.x + self.nose_length * np.cos(self.nose_angle + np.pi / 2),
                                     self.y + self.nose_length * np.sin(self.nose_angle + np.pi / 2)]
 
-    def rotate(self, angle):
-        # Sets rotation of ship and sprite
-        # Angle in degrees, CW is positive
-        self.sprite.rotation = angle
-        self.rotation = angle
+    def rotate_CW(self):
+        #LAST ATTEMPT/METHOD TO ROTATE THE SHIP (Lol why is everything in pyglet broken)
+        #I am going to pretend that it rotates by eye.
 
-        self.nose_locator()
+        angle = 260/60
+        self.move_left()
+        self.move_left()
+        self.move_forward()
+        self.sprite.rotation += angle
+        self.rotation += angle
 
-        relative_coordinates = np.array([self.nose_location[0] - self.center[0], self.nose_location[1] - self.center[1]])
+        #lol, wow, this is so broken but I guess it works
 
-        rotation_matrix = np.array([[np.cos(np.radians(angle)), -np.sin(np.radians(angle))],
-                                    [np.sin(np.radians(angle)), np.cos(np.radians(angle))]])
+    def rotate_CCW(self):
 
-        rotated_coordinates = np.dot(rotation_matrix, relative_coordinates)
+        angle = 260/60
+        self.move_right()
+        self.move_right()
+        self.move_backward()
+        self.sprite.rotation -= angle
+        self.rotation -= angle
 
-        self.sprite.x = self.center[0] + rotated_coordinates[0]
-        self.sprite.y = self.center[1] + rotated_coordinates[1]
+
+
 
     #Move only based on where the ship is facing
+        pass
     def move_forward(self):
         self.nose_locator()
 
@@ -148,30 +159,51 @@ class Player:
         self.sprite.x = self.x
         self.sprite.y = self.y
 
-
-    def update(self, destination):
-        """
-        self.destination = destination
-        #Updates nose location
+    def move_backward(self):
         self.nose_locator()
 
-        #Make a vector from ship nose to destination
-        direction = np.array([self.destination[0] - self.nose_location[0],
-                                     self.destination[1] - self.nose_location[1]])
+        ship_direction = np.array([self.nose_location[0] - self.center[0],
+                                   self.nose_location[1] - self.center[1]])
+        ship_direction /= np.linalg.norm(ship_direction)
+        move_vector = ship_direction * self.speed
 
-        # Move the ship towards the destination
-        distance = np.linalg.norm(self.destination - np.array(self.center))
-        if distance >= Ship_Speed:
-            direction /= distance  # Normalize the direction vector
-            move_vector = direction * Ship_Speed
-            self.x += move_vector[0]
-            self.y += move_vector[1]
-            self.sprite.x = self.x
-            self.sprite.y = self.y
-            self.nose_location[0] += move_vector[0]
-            self.nose_location[1] += move_vector[1]
+        # Move the ship
+        self.x -= move_vector[0]
+        self.y -= move_vector[1]
+        self.sprite.x = self.x
+        self.sprite.y = self.y
 
-        """
-        self.rotate(90)
-        self.move_forward()
-        print(self.speed)
+    def move_left(self):
+        self.nose_locator()
+
+        ship_direction = np.array([self.nose_location[0] - self.center[0],
+                                   self.nose_location[1] - self.center[1]])
+        ship_direction /= np.linalg.norm(ship_direction)
+        move_vector = ship_direction * self.speed
+
+        # Move the ship
+        self.x -= move_vector[1]
+        self.y += move_vector[0]
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+    def move_right(self):
+        self.nose_locator()
+
+        ship_direction = np.array([self.nose_location[0] - self.center[0],
+                                   self.nose_location[1] - self.center[1]])
+        ship_direction /= np.linalg.norm(ship_direction)
+        move_vector = ship_direction * self.speed
+
+        # Move the ship
+        self.x += move_vector[1]
+        self.y -= move_vector[0]
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+
+    def update(self, destination):
+
+        self.nose_locator()
+        self.rotate_CW()
+        #print(f"Ship x and y: {self.x}, {self.y}, Sprite x and y: {self.sprite.x}, {self.sprite.y}")
+
+        #self.move_forward()

@@ -122,7 +122,7 @@ class Dot:
 
 #Objects
 X_Mark = curser()
-player = Player(10,100)
+player = Player(400,200)
 dot = Dot(100, 100, 5)
 
 @window.event
@@ -219,8 +219,14 @@ def on_draw():
 
     #Dot Test
     player.nose_locator()
-    dot = Dot(player.center[0], player.center[1], 5)
+    dot = Dot(player.x, player.y, 5)
+    dot2 = Dot(player.sprite.x, player.sprite.y, 5)
+    dot3 = Dot(player.center[0], player.center[1], 5)
+    dot4 = Dot(player.nose_location[0], player.nose_location[1], 5)
     dot.draw()
+    dot2.draw()
+    dot3.draw()
+    dot4.draw()
 
 
 

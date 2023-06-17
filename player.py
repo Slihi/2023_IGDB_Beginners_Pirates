@@ -5,7 +5,7 @@ import numpy as np
 #Variables
 Ship_Level = 1
 Ship_Max_Level = 3
-Ship_Speed = 1
+Ship_Speed = 0
 Ship_Max_Speed = 5
 Ship_rotation_speed = 3
 
@@ -18,22 +18,22 @@ pyglet.resource.reindex()
 #Level 1 Ship, bigger resolution to reduce pixelation from improper scaling transform
 Ship_bigger = pyglet.resource.image("Ship_bigger.png")
 
-class ScreenBoi:
-    def __init__(self):
-        self.width = ScreenSize[0]
-        self.height = ScreenSize[1]
-
-
 class Player:
     def __init__(self):
+
+        #window stuff
+        self.screen_width = ScreenSize[0]
+        self.screen_height = ScreenSize[1]
+
 
         #sprite and dimensions
         self.nose_location = [0, 0]
         self.sprite = pyglet.sprite.Sprite(Ship_bigger)
-        self.sprite.scale_x = ScreenSize[0] / (self.sprite.width * 14)
-        self.sprite.scale_y = ScreenSize[1] / (self.sprite.height * 5)
-        self.x = ScreenSize[0] / 2 - (self.sprite.width / 2)
-        self.y = ScreenSize[1] / 2 - (self.sprite.height / 2)
+        self.sprite.scale_x = self.screen_width / (self.sprite.width * 14)
+        self.sprite.scale_y = self.screen_height / (self.sprite.height * 5)
+        self.scale_ratio = self.sprite.scale_x / self.sprite.scale_y
+        self.x = self.screen_width / 2 - (self.sprite.width / 2)
+        self.y = self.screen_height / 2 - (self.sprite.height / 2)
         self.sprite.x = self.x
         self.sprite.y = self.y
 
@@ -60,28 +60,45 @@ class Player:
         # movement
         self.destination = (self.center[0], self.center[1])
 
+    def set_sprite_scale(self, width, height):
 
+        screen_dimensions_before = (self.screen_width, self.screen_height)
+
+        self.screen_height = height
+        self.screen_width = width
+
+        #Scale the sprite
+        scale_x_ratio = self.screen_width / screen_dimensions_before[0]
+        self.sprite.scale_x *= scale_x_ratio
+        #Makes it look better, but doesn't work for extremely wide screens
+        # as ship huge and field small
+        self.sprite.scale_y = self.sprite.scale_x / self.scale_ratio
+
+        #Recalculate ship position based on new screen size
+        self.x = self.screen_width / 2 - (self.sprite.width / 2)
+        self.y = self.screen_height / 2 - (self.sprite.height / 2)
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+
+        #Recalculate center and nose
+        self.nose_locator()
 
     def draw(self):
         self.sprite.draw()
 
-    def rotate(self, angle):
-        #Sets rotation of ship and sprite
-        #Angle in degrees, CW is positive
-        self.sprite.rotation = angle
-        self.rotation = angle
+
     #Returns the location of the center of the ship, based on the angle
     def center_locator(self):
 
         self.center_angle = -np.radians(self.initial_center_angle + self.rotation)
 
         #I adjust for the slight offset of the sprite's height
-        self.center_location = [self.x + self.center_length * np.cos(self.center_angle + np.pi / 2),
+        self.center = [self.x + self.center_length * np.cos(self.center_angle + np.pi / 2),
                                     self.y + self.center_length * np.sin(self.center_angle + np.pi / 2)]
-        self.center = self.center_location
 
     # Returns the location of the nose of the ship, based on the angle
     # Lol I have no idea how this works, but it does?
+    # It also has center locator in it
     def nose_locator(self):
 
         self.center_locator()
@@ -91,6 +108,24 @@ class Player:
         self.nose_location = [self.x + self.nose_length * np.cos(self.nose_angle + np.pi / 2),
                                     self.y + self.nose_length * np.sin(self.nose_angle + np.pi / 2)]
 
+    def rotate(self, angle):
+        # Sets rotation of ship and sprite
+        # Angle in degrees, CW is positive
+        self.sprite.rotation = angle
+        self.rotation = angle
+
+        self.nose_locator()
+
+        relative_coordinates = np.array([self.nose_location[0] - self.center[0], self.nose_location[1] - self.center[1]])
+
+        rotation_matrix = np.array([[np.cos(np.radians(angle)), -np.sin(np.radians(angle))],
+                                    [np.sin(np.radians(angle)), np.cos(np.radians(angle))]])
+
+        rotated_coordinates = np.dot(rotation_matrix, relative_coordinates)
+
+        self.sprite.x = self.center[0] + rotated_coordinates[0]
+        self.sprite.y = self.center[1] + rotated_coordinates[1]
+
     #Move only based on where the ship is facing
     def move_forward(self):
         self.nose_locator()
@@ -98,7 +133,7 @@ class Player:
         ship_direction = np.array([self.nose_location[0] - self.center[0],
                                     self.nose_location[1] - self.center[1]])
         ship_direction /= np.linalg.norm(ship_direction)
-        move_vector = ship_direction * Ship_Speed
+        move_vector = ship_direction * (Ship_Speed * self.sprite.scale_x * self.screen_width / self.sprite.width)
 
         #Move the ship
         self.x += move_vector[0]
@@ -130,7 +165,7 @@ class Player:
             self.nose_location[1] += move_vector[1]
 
         """
-
         self.rotate(60)
         self.move_forward()
+
         #print(self.nose_location)

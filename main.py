@@ -1,7 +1,7 @@
 import pyglet
 from pyglet.window import key
 import numpy as np
-from player import Player, ScreenBoi
+from player import Player
 
 
 """
@@ -124,14 +124,13 @@ class Dot:
 X_Mark = curser()
 player = Player()
 dot = Dot(100, 100, 5)
-ScreenChecker = ScreenBoi()
 
 @window.event
 #Resize window
 def on_resize(width, height):
     global ScreenSize
     ScreenSize = (width, height)
-    ScreenBoi.ScreenSize = ScreenSize
+    player.set_sprite_scale(width, height)
     #Update Player dimensions and position
 @window.event
 def on_mouse_press(x, y, button, modifiers):

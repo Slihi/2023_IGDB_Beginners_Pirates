@@ -72,7 +72,7 @@ class Player:
         self.sprite.scale_x *= scale_x_ratio
         #Makes it look better, but doesn't work for extremely wide screens
         # as ship huge and field small
-        self.sprite.scale_y = self.sprite.scale_x / self.scale_ratio
+        self.sprite.scale_y *= scale_x_ratio
 
         #Recalculate ship position based on new screen size
         self.x = self.screen_width / 2 - (self.sprite.width / 2)
@@ -83,6 +83,8 @@ class Player:
         #Recalculate center and nose
         self.nose_locator()
 
+        print(f"nose location: {self.nose_location}")
+
     def draw(self):
         self.sprite.draw()
 
@@ -91,6 +93,7 @@ class Player:
     def center_locator(self):
 
         self.center_angle = -np.radians(self.initial_center_angle + self.rotation)
+        self.center_length = np.sqrt((self.sprite.width / 2) ** 2 + (self.sprite.height / 2) ** 2)
 
         #I adjust for the slight offset of the sprite's height
         self.center = [self.x + self.center_length * np.cos(self.center_angle + np.pi / 2),
@@ -103,8 +106,8 @@ class Player:
 
         self.center_locator()
 
+        self.nose_length = np.sqrt((self.sprite.width / 2) ** 2 + self.sprite.height ** 2)
         self.nose_angle = -np.radians(self.initial_nose_angle + self.rotation)
-
         self.nose_location = [self.x + self.nose_length * np.cos(self.nose_angle + np.pi / 2),
                                     self.y + self.nose_length * np.sin(self.nose_angle + np.pi / 2)]
 

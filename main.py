@@ -219,7 +219,7 @@ def on_draw():
 
     #Dot Test
     player.nose_locator()
-    dot = Dot(player.nose_location[0], player.nose_location[1], 5)
+    dot = Dot(player.center[0], player.center[1], 5)
     dot.draw()
 
 

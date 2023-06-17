@@ -5,7 +5,7 @@ import numpy as np
 #Variables
 Ship_Level = 1
 Ship_Max_Level = 3
-Ship_Speed = 0
+Ship_Speed = 0.3
 Ship_Max_Speed = 5
 Ship_rotation_speed = 3
 
@@ -19,7 +19,7 @@ pyglet.resource.reindex()
 Ship_bigger = pyglet.resource.image("Ship_bigger.png")
 
 class Player:
-    def __init__(self):
+    def __init__(self, initial_x, initial_y):
 
         #window stuff
         self.screen_width = ScreenSize[0]
@@ -32,8 +32,8 @@ class Player:
         self.sprite.scale_x = self.screen_width / (self.sprite.width * 14)
         self.sprite.scale_y = self.screen_height / (self.sprite.height * 5)
         self.scale_ratio = self.sprite.scale_x / self.sprite.scale_y
-        self.x = self.screen_width / 2 - (self.sprite.width / 2)
-        self.y = self.screen_height / 2 - (self.sprite.height / 2)
+        self.x = initial_x
+        self.y = initial_y
         self.sprite.x = self.x
         self.sprite.y = self.y
 
@@ -59,6 +59,7 @@ class Player:
 
         # movement
         self.destination = (self.center[0], self.center[1])
+        self.speed = np.sqrt(self.screen_width**2 + self.screen_height**2) / Ship_Speed
 
     def set_sprite_scale(self, width, height):
 
@@ -75,15 +76,18 @@ class Player:
         self.sprite.scale_y *= scale_x_ratio
 
         #Recalculate ship position based on new screen size
-        self.x = self.screen_width / 2 - (self.sprite.width / 2)
-        self.y = self.screen_height / 2 - (self.sprite.height / 2)
+        self.x = self.screen_width / screen_dimensions_before[0] * self.x
+        self.y = self.screen_height / screen_dimensions_before[1] * self.y
         self.sprite.x = self.x
         self.sprite.y = self.y
+
+        #Recalculate speed
+        self.speed = np.sqrt(self.screen_width ** 2 + self.screen_height ** 2) / Ship_Speed
 
         #Recalculate center and nose
         self.nose_locator()
 
-        print(f"nose location: {self.nose_location}")
+        #print(f"nose location: {self.nose_location}")
 
     def draw(self):
         self.sprite.draw()
@@ -168,7 +172,6 @@ class Player:
             self.nose_location[1] += move_vector[1]
 
         """
-        self.rotate(60)
+        self.rotate(90)
         self.move_forward()
-
-        #print(self.nose_location)
+        print(self.speed)

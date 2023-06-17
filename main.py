@@ -122,7 +122,7 @@ class Dot:
 
 #Objects
 X_Mark = curser()
-player = Player()
+player = Player(10,100)
 dot = Dot(100, 100, 5)
 
 @window.event
@@ -135,7 +135,7 @@ def on_resize(width, height):
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     global keys
-    print(f"Mouse pressed at {x}, {y}")
+    #print(f"Mouse pressed at {x}, {y}")
     if key.LSHIFT not in keys:
     #update X_Mark
         X_Mark.attacking = False

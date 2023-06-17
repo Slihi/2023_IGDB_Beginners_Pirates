@@ -68,7 +68,6 @@ class Player:
     def rotate(self, angle):
         #Sets rotation of ship and sprite
         #Angle in degrees, CW is positive
-        #Let's start off and assume the angle  is less than 90 degrees
         self.sprite.rotation = angle
         self.rotation = angle
     #Returns the location of the center of the ship, based on the angle
@@ -91,9 +90,25 @@ class Player:
 
         self.nose_location = [self.x + self.nose_length * np.cos(self.nose_angle + np.pi / 2),
                                     self.y + self.nose_length * np.sin(self.nose_angle + np.pi / 2)]
-        print(self.nose_angle)
+
+    #Move only based on where the ship is facing
+    def move_forward(self):
+        self.nose_locator()
+
+        ship_direction = np.array([self.nose_location[0] - self.center[0],
+                                    self.nose_location[1] - self.center[1]])
+        ship_direction /= np.linalg.norm(ship_direction)
+        move_vector = ship_direction * Ship_Speed
+
+        #Move the ship
+        self.x += move_vector[0]
+        self.y += move_vector[1]
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+
 
     def update(self, destination):
+        """
         self.destination = destination
         #Updates nose location
         self.nose_locator()
@@ -114,10 +129,8 @@ class Player:
             self.nose_location[0] += move_vector[0]
             self.nose_location[1] += move_vector[1]
 
+        """
 
-        if self.attacking:
-            self.attack_destination = np.array([X_Mark.x, X_Mark.y])
-            attack_vector = self.attack_destination - self.center
-
-        self.rotate(0)
+        self.rotate(60)
+        self.move_forward()
         #print(self.nose_location)

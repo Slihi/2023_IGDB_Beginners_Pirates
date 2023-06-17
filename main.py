@@ -58,7 +58,7 @@ TAN = (210, 180, 140)
 #Variables
 ScreenSize = (800, 600)
 AspectRatio = (ScreenSize[0] / ScreenSize[1])
-game_title = "Game"
+game_title = "Pirates"
 FPS = 60
 
 #Window
@@ -119,7 +119,6 @@ class Dot:
     def draw(self):
         dot = pyglet.shapes.Circle(self.x, self.y, self.radius, color=self.color)
         dot.draw()
-
 
 #Objects
 X_Mark = curser()
@@ -191,12 +190,20 @@ def on_draw():
     Ocean_Tile1_Sprite.scale_y = 1
     Ocean_Tile1_Sprite.scale_x = 1
 
+    tiles = []
+    num_tiles_x = int(ScreenSize[0] / Ocean_Tile1_Sprite.width) + 1
+    num_tiles_y = int(ScreenSize[1] / Ocean_Tile1_Sprite.height) + 1
+
     #Need to turn into a batch
     for i in range(0, int(ScreenSize[0] / Ocean_Tile1_Sprite.width) + 1):
         for j in range(0, int(ScreenSize[1] / Ocean_Tile1_Sprite.height) + 1):
             Ocean_Tile1_Sprite.x = i * Ocean_Tile1_Sprite.width
             Ocean_Tile1_Sprite.y = j * Ocean_Tile1_Sprite.height
             Ocean_Tile1_Sprite.draw()
+
+
+
+
 
     #Ocean_Tile1_Sprite.scale_x = ScreenSize[0] / Ocean_Tile1_Sprite.width
     #Ocean_Tile1_Sprite.scale_y = ScreenSize[1] / Ocean_Tile1_Sprite.height

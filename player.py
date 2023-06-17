@@ -16,6 +16,7 @@ pyglet.resource.reindex()
 #Level 1 Ship, bigger resolution to reduce pixelation from improper scaling transform
 Ship_bigger = pyglet.resource.image("Ship_bigger.png")
 
+
 class Player:
     def __init__(self, initial_x, initial_y):
 
@@ -45,13 +46,14 @@ class Player:
 
         #rotation
         self.rotation = 0
+
+        # Nose stuff
         #remember that even though the sprite starts 'up', the rotation is 0,
         # so the nose is actually pointing to the right angle wise
-
-        #Nose stuff
         self.initial_nose_angle = np.degrees(np.arctan2(self.sprite.width / 2, self.sprite.height))
         #Nose length Pythagorean Theorem
         self.nose_length = np.sqrt((self.sprite.width / 2) ** 2 + self.sprite.height ** 2)
+        self.nose_location = np.array([self.x + (self.sprite.width / 2), self.y + self.sprite.height])
 
         #Center stuff
         self.center = np.array([self.x + (self.sprite.width / 2), self.y + (self.sprite.height / 2)])
@@ -59,9 +61,15 @@ class Player:
         self.center_length = np.sqrt((self.sprite.width / 2) ** 2 + (self.sprite.height / 2) ** 2)
 
         # movement
-        self.destination = (self.center[0], self.center[1])
+        self.destination = np.array([self.nose_location[0], self.nose_location[1]])
         #Calculating speed based on a distance per second along the diagonal of the screen
         self.speed = np.sqrt(self.screen_width**2 + self.screen_height**2) / (Ship_Speed_portion * 60)
+
+        #Pathfinding Nodes
+        self.pathfinding_nodes = {}
+
+    def add_pathfinding_node(self, node_x, node_y):
+        self.pathfinding_nodes[node_x, node_y] = 7
 
     def set_sprite_scale(self, width, height):
 
@@ -201,8 +209,15 @@ class Player:
 
     def update(self, destination):
 
+        #Figure out pathfinding
         self.nose_locator()
-        self.move_forward()
+        self.destination = destination
+
+        #Distance between nose and destination
+        distance = np.linalg.norm(self.nose_location - destination)
+        print(f"Distance: {distance}")
+        #Move when destination is not reached
+
         #print(f"Ship x and y: {self.x}, {self.y}, Sprite x and y: {self.sprite.x}, {self.sprite.y}")
 
         #self.move_forward()

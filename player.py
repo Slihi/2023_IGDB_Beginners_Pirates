@@ -5,8 +5,7 @@ import numpy as np
 #Variables
 Ship_Level = 1
 Ship_Max_Level = 3
-Ship_Speed = 0.3
-Ship_Max_Speed = 5
+Ship_Speed_portion = 10
 Ship_rotation_speed = 3
 
 ScreenSize = (800, 600)
@@ -59,7 +58,8 @@ class Player:
 
         # movement
         self.destination = (self.center[0], self.center[1])
-        self.speed = np.sqrt(self.screen_width**2 + self.screen_height**2) / Ship_Speed
+        #Calculating speed based on a distance per second along the diagonal of the screen
+        self.speed = np.sqrt(self.screen_width**2 + self.screen_height**2) / (Ship_Speed_portion * 60)
 
     def set_sprite_scale(self, width, height):
 
@@ -81,8 +81,8 @@ class Player:
         self.sprite.x = self.x
         self.sprite.y = self.y
 
-        #Recalculate speed
-        self.speed = np.sqrt(self.screen_width ** 2 + self.screen_height ** 2) / Ship_Speed
+        #Recalculate speed, not working
+        self.speed = np.sqrt(self.screen_width**2 + self.screen_height**2) / (Ship_Speed_portion * 60)
 
         #Recalculate center and nose
         self.nose_locator()
@@ -140,7 +140,7 @@ class Player:
         ship_direction = np.array([self.nose_location[0] - self.center[0],
                                     self.nose_location[1] - self.center[1]])
         ship_direction /= np.linalg.norm(ship_direction)
-        move_vector = ship_direction * (Ship_Speed * self.sprite.scale_x * self.screen_width / self.sprite.width)
+        move_vector = ship_direction * self.speed
 
         #Move the ship
         self.x += move_vector[0]

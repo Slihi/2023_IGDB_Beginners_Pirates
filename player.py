@@ -5,7 +5,7 @@ import numpy as np
 #Variables
 Ship_Level = 1
 Ship_Max_Level = 3
-Ship_Speed_portion = 8
+Ship_Speed_portion = 7
 
 ScreenSize = (800, 600)
 AspectRatio = (ScreenSize[0] / ScreenSize[1])
@@ -26,7 +26,6 @@ class Player:
 
 
         #sprite and dimensions
-        self.nose_location = [0, 0]
         self.sprite = pyglet.sprite.Sprite(Ship_bigger)
 
         #Scale the sprite
@@ -64,12 +63,6 @@ class Player:
         self.destination = np.array([self.nose_location[0], self.nose_location[1]])
         #Calculating speed based on a distance per second along the diagonal of the screen
         self.speed = np.sqrt(self.screen_width**2 + self.screen_height**2) / (Ship_Speed_portion * 60)
-
-        #Pathfinding Nodes
-        self.pathfinding_nodes = {}
-
-    def add_pathfinding_node(self, node_x, node_y):
-        self.pathfinding_nodes[node_x, node_y] = 7
 
     def set_sprite_scale(self, width, height):
 
@@ -129,10 +122,9 @@ class Player:
         #LAST ATTEMPT/METHOD TO ROTATE THE SHIP (Lol why is everything in pyglet broken)
         #I am going to pretend that it rotates by eye.
 
-        angle = 260/60
+        angle = 70/60
         self.move_left()
-        self.move_left()
-        self.move_forward()
+        self.move_forward_slow()
         self.sprite.rotation += angle
         self.rotation += angle
 
@@ -140,15 +132,11 @@ class Player:
 
     def rotate_CCW(self):
 
-        angle = 260/60
-        self.move_right()
+        angle = 70/60
         self.move_right()
         self.move_backward()
         self.sprite.rotation -= angle
         self.rotation -= angle
-
-
-
 
     #Move only based on where the ship is facing
         pass
@@ -166,27 +154,48 @@ class Player:
         self.sprite.x = self.x
         self.sprite.y = self.y
 
+    def move_forward_slow(self):
+        self.nose_locator()
+
+        ship_direction = np.array([self.nose_location[0] - self.center[0],
+                                   self.nose_location[1] - self.center[1]])
+        ship_direction /= np.linalg.norm(ship_direction)
+
+        #Same as move_forward, but with slower modifier
+        modifer = 0.25
+        move_vector = ship_direction * self.speed * modifer
+
+        # Move the ship
+        self.x += move_vector[0]
+        self.y += move_vector[1]
+        self.sprite.x = self.x
+        self.sprite.y = self.y
+
     def move_backward(self):
         self.nose_locator()
 
         ship_direction = np.array([self.nose_location[0] - self.center[0],
                                    self.nose_location[1] - self.center[1]])
         ship_direction /= np.linalg.norm(ship_direction)
-        move_vector = ship_direction * self.speed
+
+        modifer = 0.25
+        move_vector = ship_direction * self.speed * modifer
 
         # Move the ship
         self.x -= move_vector[0]
         self.y -= move_vector[1]
         self.sprite.x = self.x
         self.sprite.y = self.y
-
     def move_left(self):
         self.nose_locator()
 
         ship_direction = np.array([self.nose_location[0] - self.center[0],
                                    self.nose_location[1] - self.center[1]])
         ship_direction /= np.linalg.norm(ship_direction)
-        move_vector = ship_direction * self.speed
+
+        #To help with turning speed, radius, introducing modifier
+        modifier = 0.5
+        move_vector = ship_direction * self.speed * modifier
 
         # Move the ship
         self.x -= move_vector[1]
@@ -199,7 +208,9 @@ class Player:
         ship_direction = np.array([self.nose_location[0] - self.center[0],
                                    self.nose_location[1] - self.center[1]])
         ship_direction /= np.linalg.norm(ship_direction)
-        move_vector = ship_direction * self.speed
+
+        modifier = 0.5
+        move_vector = ship_direction * self.speed * modifier
 
         # Move the ship
         self.x += move_vector[1]
@@ -211,13 +222,13 @@ class Player:
 
         #Figure out pathfinding
         self.nose_locator()
+        self.rotate_CCW()
         self.destination = destination
 
+
+
+
         #Distance between nose and destination
-        distance = np.linalg.norm(self.nose_location - destination)
-        print(f"Distance: {distance}")
-        #Move when destination is not reached
+        #distance = np.linalg.norm(self.nose_location - destination)
+        #print(f"Distance: {distance}")
 
-        #print(f"Ship x and y: {self.x}, {self.y}, Sprite x and y: {self.sprite.x}, {self.sprite.y}")
-
-        #self.move_forward()

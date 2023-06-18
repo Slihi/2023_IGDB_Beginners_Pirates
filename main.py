@@ -32,8 +32,6 @@ Ship_Max_Level = 3
 Ship_Speed = 1
 Ship_Max_Speed = 5
 Ship_rotation_speed = 3
-turn_delay = 1/3
-turn_delay_counter = 0
 
 #Resources
 #Import Assets folder in the same directory as main.py
@@ -203,9 +201,6 @@ def on_draw():
             Ocean_Tile1_Sprite.y = j * Ocean_Tile1_Sprite.height
             Ocean_Tile1_Sprite.draw()
 
-            #Adding pathfinding notes based on ocean tiles
-            player.add_pathfinding_node(Ocean_Tile1_Sprite.x, Ocean_Tile1_Sprite.y)
-
 
 
 
@@ -245,21 +240,6 @@ def update(dt):
     global turn_delay
 
     player.update(player.destination)
-
-
-    #Looks terrible, but it works
-    turn_delay_counter += turn_delay
-
-    if turn_delay_counter >= 1:
-        turn_delay_counter = 0
-
-    if turn_delay_counter == 0:
-        if key.RIGHT in keys:
-            player.rotate_CW()
-        if key.LEFT in keys:
-            player.rotate_CCW()
-
-    #print(player.pathfinding_nodes)
 
 #Run
 if __name__ == "__main__":

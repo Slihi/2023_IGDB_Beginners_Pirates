@@ -122,7 +122,7 @@ class Player:
         #LAST ATTEMPT/METHOD TO ROTATE THE SHIP (Lol why is everything in pyglet broken)
         #I am going to pretend that it rotates by eye.
 
-        angle = 70/60
+        angle = 120/60
         self.move_left()
         self.move_forward_slow()
         self.sprite.rotation += angle
@@ -132,7 +132,7 @@ class Player:
 
     def rotate_CCW(self):
 
-        angle = 70/60
+        angle = 120/60
         self.move_right()
         self.move_backward()
         self.sprite.rotation -= angle
@@ -162,7 +162,7 @@ class Player:
         ship_direction /= np.linalg.norm(ship_direction)
 
         #Same as move_forward, but with slower modifier
-        modifer = 0.25
+        modifer = 0.45
         move_vector = ship_direction * self.speed * modifer
 
         # Move the ship
@@ -178,7 +178,7 @@ class Player:
                                    self.nose_location[1] - self.center[1]])
         ship_direction /= np.linalg.norm(ship_direction)
 
-        modifer = 0.25
+        modifer = 0.45
         move_vector = ship_direction * self.speed * modifer
 
         # Move the ship
@@ -194,7 +194,7 @@ class Player:
         ship_direction /= np.linalg.norm(ship_direction)
 
         #To help with turning speed, radius, introducing modifier
-        modifier = 0.5
+        modifier = 0.70
         move_vector = ship_direction * self.speed * modifier
 
         # Move the ship
@@ -209,7 +209,7 @@ class Player:
                                    self.nose_location[1] - self.center[1]])
         ship_direction /= np.linalg.norm(ship_direction)
 
-        modifier = 0.5
+        modifier = 0.70
         move_vector = ship_direction * self.speed * modifier
 
         # Move the ship
@@ -222,7 +222,7 @@ class Player:
 
         #Figure out pathfinding
         self.nose_locator()
-        self.rotate_CCW()
+        self.move_forward()
         self.destination = destination
 
 

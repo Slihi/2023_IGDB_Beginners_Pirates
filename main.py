@@ -241,6 +241,12 @@ def update(dt):
 
     player.update(player.destination)
 
+    if key.LEFT in keys:
+        player.rotate_CCW()
+
+    if key.RIGHT in keys:
+        player.rotate_CW()
+
 #Run
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1 / FPS)
